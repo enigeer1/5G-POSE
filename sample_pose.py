@@ -12,9 +12,9 @@ import socket
 import math
 import time
 import os
-
-print("*"*90)
-print(cv.__version__)
+#
+# print("*"*90)
+# print(cv.__version__)
 
 def cal_angel(x, y):
     x = np.array(x)
@@ -69,9 +69,9 @@ def save_file(path, angle):
 def get_args():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--device", type=int, default=1)
-    parser.add_argument("--width", help='cap width', type=int, default=960)
-    parser.add_argument("--height", help='cap height', type=int, default=540)
+    parser.add_argument("--device", type=int, default=0)
+    parser.add_argument("--width", help='cap width', type=int, default=1080)
+    parser.add_argument("--height", help='cap height', type=int, default=960)
 
     parser.add_argument('--upper_body_only', action='store_true')
     parser.add_argument("--min_detection_confidence",
@@ -101,40 +101,49 @@ def main():
     upper_body_only = args.upper_body_only
     min_detection_confidence = args.min_detection_confidence
     min_tracking_confidence = args.min_tracking_confidence
-
+#############dddddddddd
     use_brect = args.use_brect
 
     # カメラ準備 ###############################################################
-    cap = cv.VideoCapture(cap_device)
-    cap.set(cv.CAP_PROP_FRAME_WIDTH, cap_width)
-    cap.set(cv.CAP_PROP_FRAME_HEIGHT, cap_height)
+    # cap = cv.VideoCapture(cap_device)
+    # cap.set(cv.CAP_PROP_FRAME_WIDTH, 1080)
+    # cap.set(cv.CAP_PROP_FRAME_HEIGHT, 960)
+    # cap.set(CV_CAP_PROP_FRAME_WIDTH, 1080)
+    # cap.set(CV_CAP_PROP_FRAME_HEIGHT, 960)
+    # cap.set(CV_CAP_PROP_FPS, 30)
 
+    rtmpUrl = "rtmp://139.196.208.10:7592/camera1"
+    # rtmpUrl = "rtmp://127.0.0.1:1935/live"
 
-    rtmpUrl = "rtmp://220.196.249.183:7592/camera1"
+    # rtmpUrl = "rtmp://139.196.208.10:7503/live/livestream"
+    # rtmpUrl = "rtmp://139.196.208.10:8080/camera1"
+
     camera_path = 0
     cap = cv.VideoCapture(camera_path)
-
+    cap.set(cv.CAP_PROP_FRAME_WIDTH, 1080)
+    cap.set(cv.CAP_PROP_FRAME_HEIGHT, 960)
     # Get video information`
     fps = int(cap.get(cv.CAP_PROP_FPS))
     width = int(cap.get(cv.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv.CAP_PROP_FRAME_HEIGHT))
 
     command = [
-        # 'F:\\Downloads\\Compressed\\ffmpeg-4.4-full_build\\bin\\ffmpeg',
-        'G:\\ffmpeg_build\\bin\\ffmpeg',
+        'D:\\ffmpeg_build\\bin\\ffmpeg',
         '-y',
         '-f', 'rawvideo',
         '-vcodec', 'rawvideo',
         '-pix_fmt', 'bgr24',
         '-s', "{}x{}".format(width, height),
-        '-r', '15',
+        '-r', '17',
         # '-r', str(fps),
         '-i', '-',
-        '-max_delay', '1',
+        '-max_delay', '0',
         '-g', '0',
         '-c:v', 'libx264',
         '-pix_fmt', 'yuv420p',
         '-preset', 'ultrafast',
+        '-tune:v', 'zerolatency',
+
             # '-segment_times', '5',
             # '-bufsize', '64M',
             # '-maxrate', "4M",
@@ -142,7 +151,6 @@ def main():
         # '-fflags', 'nobuffer',
         # '-b', '900000',
         '-f', 'flv',
-        # rtspUrl]
         rtmpUrl]
 
 
@@ -182,8 +190,8 @@ def main():
                                          upper_body_only)
             debug_image = draw_bounding_rect(use_brect, debug_image, brect)
             
-        cv.putText(debug_image, "FPS:" + str(display_fps), (10, 30),
-                   cv.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 0), 2, cv.LINE_AA)
+        # cv.putText(debug_image, "FPS:" + str(display_fps), (10, 30),
+        #            cv.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 0), 2, cv.LINE_AA)
 
         # キー処理(ESC：終了) #################################################
         key = cv.waitKey(1)
@@ -191,7 +199,8 @@ def main():
             break
 
         # 画面反映 #############################################################
-        cv.imshow('MediaPipe Pose Demo', debug_image)
+        # cv.imshow('MediaPipe Pose Demo', debug_image)
+        cv.imshow("    ", debug_image)
         p.stdin.write(debug_image.tobytes())
         # print(debug_image)
     cap.release()
@@ -228,76 +237,87 @@ def draw_landmarks(image, landmarks, upper_body_only, visibility_th=0.5):
             continue
 
         if index == 0:  # 鼻
-            cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
+            # cv.circle(image, (landmark_x, landmark_y), 2, (0, 255, 0), 2)
+            pass
         if index == 1:  # 右目：目頭
-            cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
+            # cv.circle(image, (landmark_x, landmark_y), 2, (0, 255, 0), 2)
+            pass
         if index == 2:  # 右目：瞳
-            cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
+            # cv.circle(image, (landmark_x, landmark_y), 2, (0, 255, 0), 2)
+            pass
         if index == 3:  # 右目：目尻
-            cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
+            # cv.circle(image, (landmark_x, landmark_y), 2, (0, 255, 0), 2)
+            pass
         if index == 4:  # 左目：目頭
-            cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
+            # cv.circle(image, (landmark_x, landmark_y), 2, (0, 255, 0), 2)
+            pass
         if index == 5:  # 左目：瞳
-            cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
+            # cv.circle(image, (landmark_x, landmark_y), 2, (0, 255, 0), 2)
+            pass
         if index == 6:  # 左目：目尻
-            cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
+            # cv.circle(image, (landmark_x, landmark_y), 2, (0, 255, 0), 2)
+            pass
         if index == 7:  # 右耳
-            cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
+            # cv.circle(image, (landmark_x, landmark_y), 2, (0, 255, 0), 2)
+            pass
         if index == 8:  # 左耳
-            cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
+            # cv.circle(image, (landmark_x, landmark_y), 2, (0, 255, 0), 2)
+            pass
         if index == 9:  # 口：左端
-            cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
+            # cv.circle(image, (landmark_x, landmark_y), 2, (0, 255, 0), 2)
+            pass
         if index == 10:  # 口：左端
-            cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
+            # cv.circle(image, (landmark_x, landmark_y), 2, (0, 255, 0), 2)
+            pass
         if index == 11:  # 右肩
-            cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
+            cv.circle(image, (landmark_x, landmark_y), 2, (0, 255, 0), 2)
         if index == 12:  # 左肩
-            cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
+            cv.circle(image, (landmark_x, landmark_y), 2, (0, 255, 0), 2)
         if index == 13:  # 右肘
-            cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
+            cv.circle(image, (landmark_x, landmark_y), 2, (0, 255, 0), 2)
         if index == 14:  # 左肘
-            cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
+            cv.circle(image, (landmark_x, landmark_y), 2, (0, 255, 0), 2)
         if index == 15:  # 右手首
-            cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
+            cv.circle(image, (landmark_x, landmark_y), 2, (0, 255, 0), 2)
         if index == 16:  # 左手首
-            cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
+            cv.circle(image, (landmark_x, landmark_y), 2, (0, 255, 0), 2)
         if index == 17:  # 右手1(外側端)
-            cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
+            cv.circle(image, (landmark_x, landmark_y), 2, (0, 255, 0), 2)
         if index == 18:  # 左手1(外側端)
-            cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
+            cv.circle(image, (landmark_x, landmark_y), 2, (0, 255, 0), 2)
         if index == 19:  # 右手2(先端)
-            cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
+            cv.circle(image, (landmark_x, landmark_y), 2, (0, 255, 0), 2)
         if index == 20:  # 左手2(先端)
-            cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
+            cv.circle(image, (landmark_x, landmark_y), 2, (0, 255, 0), 2)
         if index == 21:  # 右手3(内側端)
-            cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
+            cv.circle(image, (landmark_x, landmark_y), 2, (0, 255, 0), 2)
         if index == 22:  # 左手3(内側端)
-            cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
+            cv.circle(image, (landmark_x, landmark_y), 2, (0, 255, 0), 2)
         if index == 23:  # 腰(右側)
-            cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
+            cv.circle(image, (landmark_x, landmark_y), 2, (0, 255, 0), 2)
         if index == 24:  # 腰(左側)
-            cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
+            cv.circle(image, (landmark_x, landmark_y), 2, (0, 255, 0), 2)
         if index == 25:  # 右ひざ 膝盖
-            cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
+            cv.circle(image, (landmark_x, landmark_y), 2, (0, 255, 0), 2)
         if index == 26:  # 左ひざ
-            cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
+            cv.circle(image, (landmark_x, landmark_y), 2, (0, 255, 0), 2)
         if index == 27:  # 右足首
-            cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
+            cv.circle(image, (landmark_x, landmark_y), 2, (0, 255, 0), 2)
         if index == 28:  # 左足首
-            cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
+            cv.circle(image, (landmark_x, landmark_y), 2, (0, 255, 0), 2)
         if index == 29:  # 右かかと 脚后跟
-            cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
+            cv.circle(image, (landmark_x, landmark_y), 2, (0, 255, 0), 2)
         if index == 30:  # 左かかと
-            cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
+            cv.circle(image, (landmark_x, landmark_y), 2, (0, 255, 0), 2)
         if index == 31:  # 右つま先   脚趾
-            cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
+            cv.circle(image, (landmark_x, landmark_y), 2, (0, 255, 0), 2)
         if index == 32:  # 左つま先
-            cv.circle(image, (landmark_x, landmark_y), 5, (0, 255, 0), 2)
-        if not upper_body_only:
-            cv.putText(image, "z:" + str(round(landmark_z, 3)),
-                       (landmark_x - 10, landmark_y - 10),
-                       cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1,
-                       cv.LINE_AA)
+            cv.circle(image, (landmark_x, landmark_y), 2, (0, 255, 0), 2)
+        # if not upper_body_only:
+            # cv.putText(image, "z:" + str(round(landmark_z, 3)),
+            #            (landmark_x - 10, landmark_y - 10),
+            #            cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1,
+            #            cv.LINE_AA)
     # 定义角度数组
     list_angle_right_eblow = []
     list_angle_left_eblow = []
@@ -309,29 +329,33 @@ def draw_landmarks(image, landmarks, upper_body_only, visibility_th=0.5):
         # 右目
         if landmark_point[1][0] > visibility_th and landmark_point[2][
                 0] > visibility_th:
-            cv.line(image, landmark_point[1][1], landmark_point[2][1],
-                    (0, 255, 0), 2)
+            # cv.line(image, landmark_point[1][1], landmark_point[2][1],
+            #         (0, 255, 0), 2)
+            pass
         if landmark_point[2][0] > visibility_th and landmark_point[3][
                 0] > visibility_th:
-            cv.line(image, landmark_point[2][1], landmark_point[3][1],
-                    (0, 255, 0), 2)
+            # cv.line(image, landmark_point[2][1], landmark_point[3][1],
+            #         (0, 255, 0), 2)
+            pass
 
         # 左目
         if landmark_point[4][0] > visibility_th and landmark_point[5][
                 0] > visibility_th:
-            cv.line(image, landmark_point[4][1], landmark_point[5][1],
-                    (0, 255, 0), 2)
+            # cv.line(image, landmark_point[4][1], landmark_point[5][1],
+            #         (0, 255, 0), 2)
+            pass
         if landmark_point[5][0] > visibility_th and landmark_point[6][
                 0] > visibility_th:
-            cv.line(image, landmark_point[5][1], landmark_point[6][1],
-                    (0, 255, 0), 2)
+            # cv.line(image, landmark_point[5][1], landmark_point[6][1],
+            #         (0, 255, 0), 2)
+            pass
 
         # 口
         if landmark_point[9][0] > visibility_th and landmark_point[10][
                 0] > visibility_th:
-            cv.line(image, landmark_point[9][1], landmark_point[10][1],
-                    (0, 255, 0), 2)
-
+            # cv.line(image, landmark_point[9][1], landmark_point[10][1],
+            #         (0, 255, 0), 2)
+            pass
         # 肩
         if landmark_point[11][0] > visibility_th and landmark_point[12][
                 0] > visibility_th:
@@ -342,7 +366,7 @@ def draw_landmarks(image, landmarks, upper_body_only, visibility_th=0.5):
         if landmark_point[11][0] > visibility_th and landmark_point[13][0] > visibility_th:
             # 右肩=================================================================
             cv.line(image, landmark_point[11][1], landmark_point[13][1],
-                    (255, 0, 0), 2)
+                    (0, 255, 0), 2)
             # 添加右上臂向量
             right_shoulder = np.array([landmark_point[11][1][0], landmark_point[11][1][1], int(landmark_z)])
             right_elbow_point = np.array([landmark_point[13][1][0], landmark_point[13][1][1], int(landmark_z)])
@@ -353,7 +377,7 @@ def draw_landmarks(image, landmarks, upper_body_only, visibility_th=0.5):
         if landmark_point[13][0] > visibility_th and landmark_point[15][
                 0] > visibility_th:
             cv.line(image, landmark_point[13][1], landmark_point[15][1],
-                    (255, 0, 0), 2)
+                    (0, 255, 0), 2)
             # 添加右下臂向量
             right_elbow_point = np.array([landmark_point[13][1][0], landmark_point[13][1][1], int(landmark_z)])
             right_hand = np.array([landmark_point[15][1][0], landmark_point[15][1][1], int(landmark_z)])
@@ -406,7 +430,7 @@ def draw_landmarks(image, landmarks, upper_body_only, visibility_th=0.5):
         if landmark_point[16][0] > visibility_th and landmark_point[18][
                 0] > visibility_th:
             cv.line(image, landmark_point[16][1], landmark_point[18][1],
-                    (0, 25, 0), 2)
+                    (0, 255, 0), 2)
         if landmark_point[18][0] > visibility_th and landmark_point[20][
                 0] > visibility_th:
             cv.line(image, landmark_point[18][1], landmark_point[20][1],
@@ -521,28 +545,28 @@ def draw_landmarks(image, landmarks, upper_body_only, visibility_th=0.5):
     # 右臂0 1x
     if len(list_angle_right_eblow) == 2:
         right_eblow_angle = cal_angel(list_angle_right_eblow[0], list_angle_right_eblow[1])
-        path1 = 'G://self//pyqt_demo//demo//show_right_eblow_angel.csv'
+        path1 = 'D://mediapipe-python-main//demo//show_right_eblow_angel.csv'
         save_file(path1, right_eblow_angle)
-        cv.putText(image, "right_eblow_angle::" + str(right_eblow_angle), (5, 50), cv.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
+        cv.putText(image, "r_e_a:" + str(right_eblow_angle), (1070, 360), cv.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
     # 左臂2 3
     if len(list_angle_left_eblow) == 2:
         left_eblow_angel = cal_angel(list_angle_left_eblow[0], list_angle_left_eblow[1])
-        path2 = 'G://self//pyqt_demo//demo//show_left_eblow_angel.csv'
+        path2 = 'D://mediapipe-python-main//demo//show_left_eblow_angel.csv'
         save_file(path2, left_eblow_angel)
 
-        cv.putText(image, "left_eblow_angel::" + str(left_eblow_angel), (5, 70), cv.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
+        cv.putText(image, "l_e_a:" + str(left_eblow_angel), (1070, 380), cv.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
     # 右胳肢窝 4 5
     if len(list_angle_right_armpit) == 2:
         right_armpit_angel = cal_angel(list_angle_right_armpit[0], list_angle_right_armpit[1])
-        path3 = 'G://self//pyqt_demo//demo//list_angle_right_armpit.csv'
+        path3 = 'D://mediapipe-python-main//demo//list_angle_right_armpit.csv'
         save_file(path3, right_armpit_angel)
-        cv.putText(image, "right_armpit_angel::" + str(right_armpit_angel), (5, 90), cv.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
+        cv.putText(image, "r_a_a:" + str(right_armpit_angel), (1070, 400), cv.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
     # 左胳肢窝 6 7
     if len(list_angle_left_armpit) == 2:
         left_armpit_angel = cal_angel(list_angle_left_armpit[0], list_angle_left_armpit[1])
-        path4 = 'G://self//pyqt_demo//demo//list_angle_left_armpit.csv'
+        path4 = 'D://mediapipe-python-main//demo//list_angle_left_armpit.csv'
         save_file(path4, left_armpit_angel)
-        cv.putText(image, "left_armpit_angel::" + str(left_armpit_angel), (5, 110), cv.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
+        cv.putText(image, "l_a_a:" + str(left_armpit_angel), (1070, 420), cv.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
     # # 右腿8 9
     # right_knee_angel = cal_angel(list_angle[8], list_angle[9])
     # cv.putText(image, "right_knee_angel::" + str(right_knee_angel), (5, 130), cv.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)

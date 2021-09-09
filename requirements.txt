@@ -1,0 +1,10 @@
+absl-py==0.15.0
+attrs==21.2.0
+certifi==2020.12.5
+ffmpeg==1.4
+mediapipe==0.8.3
+numpy==1.19.3
+opencv-python==4.5.4.58
+protobuf==3.19.1
+six==1.16.0
+wincertstore==0.2
