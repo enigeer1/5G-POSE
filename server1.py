@@ -9,6 +9,10 @@ import numpy
 
 # socket.AF_INET 用于服务器与服务器之间的网络通信
 # socket.SOCK_STREAM 代表基于TCP的流式socket通信
+# socket.SOCK_STREAM 代表基于TCP的流式socket通信
+# socket.AF_INET 用于服务器与服务器之间的网络通信
+# socket.SOCK_STREAM 代表基于TCP的流式socket通信
+# socket.SOCK_STREAM 代表基于TCP的流式socket通信
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # 设置地址与端口，如果是接收任意ip对本服务器的连接，地址栏可空，但端口必须设置
 address = ('192.168.8.167', 8010)
