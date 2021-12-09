@@ -7,9 +7,7 @@ import numpy
 
 
 
-# socket.AF_INET 用于服务器与服务器之间的网络通信
-# socket.SOCK_STREAM 代表基于TCP的流式socket通信
-# socket.SOCK_STREAM 代表基于TCP的流式socket通信
+
 # socket.AF_INET 用于服务器与服务器之间的网络通信
 # socket.SOCK_STREAM 代表基于TCP的流式socket通信
 # socket.SOCK_STREAM 代表基于TCP的流式socket通信
